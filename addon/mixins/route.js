@@ -147,7 +147,7 @@ export default Ember.Mixin.create({
     var startingPage = options.startingPage || 1;
     var perPage      = options.perPage || this.get('_perPage');
     var modelPath    = options.modelPath || this.get('_modelPath');
-    var afterModelPromise = options.afterModelPromise || this.get('_afterModelPromise');
+    var afterModelPromise = options.afterModelPromise || this.get('_afterModelPromise') || new Ember.RSVP.Promise();
 
     delete options.startingPage;
     delete options.perPage;
@@ -169,11 +169,7 @@ export default Ember.Mixin.create({
     }
 
     var params = Ember.merge(requestPayloadBase, options);
-    var promise = get(this, 'store').find(modelName, params);
-
-    if (afterModelPromise) {
-      promise = promise.then((models) => afterModelPromise(models));
-    }
+    var promise = get(this, 'store').find(modelName, params).then(afterModelPromise);
 
     promise.then(
       infinityModel => {
