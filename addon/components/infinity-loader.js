@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import emberVersionIs from 'ember-version-is';
 
-export default Ember.Component.extend({
+const InfinityLoaderComponent = Ember.Component.extend({
   classNames: ["infinity-loader"],
   classNameBindings: ["infinityModel.reachedInfinity"],
   guid: null,
@@ -13,21 +13,8 @@ export default Ember.Component.extend({
   developmentMode: false,
   scrollable: null,
 
-  didRender() {
-    this._super(...arguments);
-    if(emberVersionIs('greaterThanOrEqualTo', "1.13.0")) {
-      this._setup();
-    }
-  },
-
   didInsertElement() {
     this._super(...arguments);
-    if(emberVersionIs('lessThan', "1.13.0")) {
-      this._setup();
-    }
-  },
-
-  _setup() {
     this._setupScrollable();
     this.set('guid', Ember.guidFor(this));
     this._bindEvent('scroll');
@@ -42,18 +29,18 @@ export default Ember.Component.extend({
   },
 
   _bindEvent(eventName) {
-    this.get('scrollable').on(`${eventName}.${this.get('guid')}`, () => {
+    this.get('_scrollable').on(`${eventName}.${this.get('guid')}`, () => {
       Ember.run.debounce(this, this._checkIfInView, this.get('eventDebounce'));
     });
   },
 
   _unbindEvent(eventName) {
-    this.get('scrollable').off(`${eventName}.${this.get('guid')}`);
+    this.get('_scrollable').off(`${eventName}.${this.get('guid')}`);
   },
 
   _checkIfInView() {
     var selfOffset       = this.$().offset().top;
-    var scrollable       = this.get("scrollable");
+    var scrollable       = this.get("_scrollable");
     var scrollableBottom = scrollable.height() + scrollable.scrollTop();
 
     var inView = selfOffset < scrollableBottom;
@@ -68,14 +55,16 @@ export default Ember.Component.extend({
     if (Ember.typeOf(scrollable) === 'string') {
       var items = Ember.$(scrollable);
       if (items.length === 1) {
-        this.set('scrollable', items.eq(0));
+        this.set('_scrollable', items.eq(0));
       } else if (items.length > 1) {
-        throw new Error("Multiple scrollable elements found for: " + scrollable);
+        throw new Error("Ember Infinity: Multiple scrollable elements found for: " + scrollable);
       } else {
-        throw new Error("No scrollable element found for: " + scrollable);
+        throw new Error("Ember Infinity: No scrollable element found for: " + scrollable);
       }
+    } else if (scrollable === undefined || scrollable === null) {
+      this.set('_scrollable', Ember.$(window));
     } else {
-      this.set('scrollable', Ember.$(window));
+      throw new Error("Ember Infinity: Scrollable must either be a css selector string or left empty to default to window");
     }
   },
 
@@ -89,3 +78,11 @@ export default Ember.Component.extend({
     Ember.run.scheduleOnce('afterRender', this, this._checkIfInView);
   })
 });
+
+if (emberVersionIs('lessThan', '1.13.0')) {
+  InfinityLoaderComponent.reopen({
+    hasBlock: Ember.computed.alias('template')
+  });
+}
+
+export default InfinityLoaderComponent;

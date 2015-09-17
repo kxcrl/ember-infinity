@@ -1,5 +1,57 @@
 # Change Log
 
+## [v0.1.2](https://github.com/hhff/ember-infinity/tree/v0.1.2) (2015-09-02)
+[Full Changelog](https://github.com/hhff/ember-infinity/compare/v0.1.1...v0.1.2)
+
+**Closed issues:**
+
+- Scroll to current active element in list view [\#84](https://github.com/hhff/ember-infinity/issues/84)
+
+**Merged pull requests:**
+
+- yield from the template [\#72](https://github.com/hhff/ember-infinity/pull/72) ([davidgoli](https://github.com/davidgoli))
+
+## [v0.1.1](https://github.com/hhff/ember-infinity/tree/v0.1.1) (2015-08-29)
+[Full Changelog](https://github.com/hhff/ember-infinity/compare/v0.1.0...v0.1.1)
+
+**Closed issues:**
+
+- E/ED 2.0.0 support [\#81](https://github.com/hhff/ember-infinity/issues/81)
+- Better Documentation for the UpdateInfinityModel hook [\#74](https://github.com/hhff/ember-infinity/issues/74)
+- Update current model is not working [\#53](https://github.com/hhff/ember-infinity/issues/53)
+- Delete all items and perform a new query [\#47](https://github.com/hhff/ember-infinity/issues/47)
+- Remove some items from array [\#42](https://github.com/hhff/ember-infinity/issues/42)
+
+**Merged pull requests:**
+
+- Document updateInfinityModel hook, closes \#74 [\#83](https://github.com/hhff/ember-infinity/pull/83) ([hhff](https://github.com/hhff))
+- \[Bugfix\] Preserving scrollable on subsequent rerenders - reported by @cprussin [\#69](https://github.com/hhff/ember-infinity/pull/69) ([mkorfmann](https://github.com/mkorfmann))
+
+## [v0.1.0](https://github.com/hhff/ember-infinity/tree/v0.1.0) (2015-08-27)
+[Full Changelog](https://github.com/hhff/ember-infinity/compare/v0.0.14...v0.1.0)
+
+**Closed issues:**
+
+- this.refresh\(\)  unbinds Eventhandler [\#78](https://github.com/hhff/ember-infinity/issues/78)
+
+**Merged pull requests:**
+
+- bare minimum update work for ember 2 [\#79](https://github.com/hhff/ember-infinity/pull/79) ([mkorfmann](https://github.com/mkorfmann))
+
+## [v0.0.14](https://github.com/hhff/ember-infinity/tree/v0.0.14) (2015-08-20)
+[Full Changelog](https://github.com/hhff/ember-infinity/compare/v0.0.13...v0.0.14)
+
+**Closed issues:**
+
+- load multiple models in an infinity route [\#67](https://github.com/hhff/ember-infinity/issues/67)
+- Overwrite infinity-loader template no longer works [\#51](https://github.com/hhff/ember-infinity/issues/51)
+
+**Merged pull requests:**
+
+- Allow Template Overrides, closes \#51 [\#68](https://github.com/hhff/ember-infinity/pull/68) ([hhff](https://github.com/hhff))
+- dont rely on didInsertElement setting up scrollable [\#63](https://github.com/hhff/ember-infinity/pull/63) ([mkorfmann](https://github.com/mkorfmann))
+- Update for Ember Data 1.13.x, closes \#32 [\#48](https://github.com/hhff/ember-infinity/pull/48) ([hhff](https://github.com/hhff))
+
 ## [v0.0.13](https://github.com/hhff/ember-infinity/tree/v0.0.13) (2015-08-01)
 [Full Changelog](https://github.com/hhff/ember-infinity/compare/v0.0.12...v0.0.13)
 
@@ -18,6 +70,10 @@
 ## [v0.0.12](https://github.com/hhff/ember-infinity/tree/v0.0.12) (2015-07-18)
 [Full Changelog](https://github.com/hhff/ember-infinity/compare/v0.0.11...v0.0.12)
 
+**Merged pull requests:**
+
+- Added the ability to pass in extra params that are \(computed\) properties [\#43](https://github.com/hhff/ember-infinity/pull/43) ([ashrafhasson](https://github.com/ashrafhasson))
+
 ## [v0.0.11](https://github.com/hhff/ember-infinity/tree/v0.0.11) (2015-07-17)
 [Full Changelog](https://github.com/hhff/ember-infinity/compare/v0.0.10...v0.0.11)
 
@@ -25,6 +81,7 @@
 
 - support multiple directions [\#55](https://github.com/hhff/ember-infinity/issues/55)
 - Load more button instead of infinite scrolling [\#46](https://github.com/hhff/ember-infinity/issues/46)
+- Update for Ember 2.0 [\#32](https://github.com/hhff/ember-infinity/issues/32)
 
 **Merged pull requests:**
 

@@ -7,6 +7,8 @@
 [![Dependency Status](https://david-dm.org/hhff/ember-infinity.svg)](https://david-dm.org/hhff/ember-infinity)
 [![devDependency Status](https://david-dm.org/hhff/ember-infinity/dev-status.svg)](https://david-dm.org/hhff/ember-infinity#info=devDependencies)
 
+***As of v0.1.0, this library officially supports Ember 1.10 through to 2.0+ (Canary), and (aside from a few buggy versions), Ember Data pre-1.0 through to 2.0+ (Canary).  We plan to support 1.10 for the foreseeable future.***
+
 Demo: [hhff.github.io/ember-infinity/](http://hhff.github.io/ember-infinity/)
 
 Simple, flexible infinite scrolling for Ember CLI Apps.  Works out of the box
@@ -18,6 +20,8 @@ repo, but without using controllers, in preparation for Ember 2.0.
 ## Installation
 
 `ember install ember-infinity`
+
+**Note:** If you're getting an error like `semver is not defined`, you probably did `npm install` instead of `ember install`.  We use [ember-version-is](https://github.com/hhff/ember-version-is) to manage the code for different versions of Ember & Ember Data, which relies on semver.  `npm install` won't run the nested generator that adds semver to your app.
 
 ## Basic Usage
 
@@ -111,14 +115,27 @@ and ember-infinity will be set up to parse the total number of pages from a JSON
 }
 ```
 
-You may override `updateInfinityModel` to customize how the route's `model` should be updated with new objects. You may also invoke this method directly to manually push new objects into the model:
+You may override `updateInfinityModel` to customize how the route's `model` should be updated with new objects.  Let's say we only want to show objects with `isPublished === true`:
+
+```js
+updateInfinityModel(newObjects) {
+  let infinityModel = this.get(this.get('_modelPath'));
+  
+  let content = newObjects.get('content');
+  let filtered = content.filter(obj => { return obj.get('isPublished'); });
+  
+  return infinityModel.pushObjects(filtered);
+}
+```
+
+You may also invoke this method directly to manually push new objects into the model:
 
 ```js
 actions: {
-  pushHughIntoInfinityModel() [
-    var updatedInfinityModel = this.updateInfinityModel([
-      { id: 1, name: "Hugh Francis" }
-    ]);
+  pushHughsRecordsIntoInfinityModel() [
+    var updatedInfinityModel = this.updateInfinityModel(Ember.A([
+      { id: 1, name: "Hugh Francis Discography", isPublished: true }
+    ]));
     console.log(updatedInfinityModel);
   }
 }
@@ -263,6 +280,18 @@ you can work on its appearance.
 ```
 
 By default, the `infinity-loader` will just output a `span` showing its status.
+
+* **Providing a block**
+
+```html
+{{#infinity-loader infinityModel=model}}
+<img src="loading-spinner.gif" />
+{{/infinity-loader}}
+```
+
+If you provide a block to the component, it will render the block instead of
+rendering `loadingText` or `loadedText`. This will allow you to provide your
+own custom markup or styling for the loading state.
 
 * **reached-infinity Class Name**
 
