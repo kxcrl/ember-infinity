@@ -79,15 +79,6 @@ export default Ember.Mixin.create({
   _modelPath: 'controller.model',
 
   /**
-    @private
-    @property _afterModelPromise
-    @type Function
-    @default undefined
-  */
-  _afterModelPromise: undefined,
-
-
-  /**
    * Name of the "per page" param in the
    * resource request payload
    * @type {String}
@@ -164,17 +155,14 @@ export default Ember.Mixin.create({
     var startingPage = options.startingPage || 1;
     var perPage      = options.perPage || this.get('_perPage');
     var modelPath    = options.modelPath || this.get('_modelPath');
-    var afterModelPromise = options.afterModelPromise || this.get('_afterModelPromise') || new Ember.RSVP.Promise();
 
     delete options.startingPage;
     delete options.perPage;
     delete options.modelPath;
-    delete options.afterModelPromise;
 
     this.set('_perPage', perPage);
     this.set('_modelPath', modelPath);
     this.set('_extraParams', options);
-    this.set('_afterModelPromise', afterModelPromise);
 
     var requestPayloadBase = {};
     requestPayloadBase[this.get('perPageParam')] = perPage;
@@ -186,8 +174,8 @@ export default Ember.Mixin.create({
     }
 
     var params = Ember.merge(requestPayloadBase, options);
-    var promise = get(this, 'store').find(modelName, params).then(afterModelPromise);
-    let promise = this.store[this._storeFindMethod](modelName, params).then(afterModelPromise);
+
+    let promise = this.afterInfinityModel(this.store[this._storeFindMethod](modelName, params));
 
     promise.then(
       infinityModel => {
@@ -212,6 +200,17 @@ export default Ember.Mixin.create({
   },
 
   /**
+   Call additional functions after finding the infinityModel in the Ember data store.
+
+   @method afterInfinityModel
+   @param {Function} infinityModelPromise The promise created by the Ember data store find method called in infinityModel.
+   @return {Ember.RSVP.Promise}
+   */
+  afterInfinityModel(infinityModelPromise) {
+    return infinityModelPromise;
+  },
+
+  /**
    Trigger a load of the next page of results.
 
    @method infinityLoad
@@ -224,7 +223,6 @@ export default Ember.Mixin.create({
     var modelName   = this.get('_infinityModelName');
     var options     = this.get('_extraParams');
     var boundParams = this.get('_boundParams');
-    var afterModelPromise = this.get('_afterModelPromise');
 
     if (!this.get('_loadingMore') && this.get('_canLoadMore')) {
       this.set('_loadingMore', true);
@@ -236,11 +234,7 @@ export default Ember.Mixin.create({
       options = this._includeBoundParams(options, boundParams);
       var params = Ember.merge(requestPayloadBase, this.get('_extraParams'));
 
-      let promise = this.store[this._storeFindMethod](modelName, params);
-
-      if (afterModelPromise) {
-        promise = promise.then((models) => afterModelPromise(models));
-      }
+      let promise = this.afterInfinityModel(this.store[this._storeFindMethod](modelName, params));
 
       promise.then(
         newObjects => {
