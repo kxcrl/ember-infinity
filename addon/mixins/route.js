@@ -175,7 +175,7 @@ export default Ember.Mixin.create({
 
     var params = Ember.merge(requestPayloadBase, options);
 
-    let promise = this.afterInfinityModel(this.store[this._storeFindMethod](modelName, params));
+    let promise = this.store[this._storeFindMethod](modelName, params).then(this.afterInfinityModel);
 
     promise.then(
       infinityModel => {
@@ -203,11 +203,11 @@ export default Ember.Mixin.create({
    Call additional functions after finding the infinityModel in the Ember data store.
 
    @method afterInfinityModel
-   @param {Function} infinityModelPromise The promise created by the Ember data store find method called in infinityModel.
+   @param {Function} infinityModelPromise The resolved result of the Ember store find method. Passed in automatically.
    @return {Ember.RSVP.Promise}
    */
-  afterInfinityModel(infinityModelPromise) {
-    return infinityModelPromise;
+  afterInfinityModel(infinityModelPromiseResult) {
+    return infinityModelPromiseResult;
   },
 
   /**
@@ -234,7 +234,7 @@ export default Ember.Mixin.create({
       options = this._includeBoundParams(options, boundParams);
       var params = Ember.merge(requestPayloadBase, this.get('_extraParams'));
 
-      let promise = this.afterInfinityModel(this.store[this._storeFindMethod](modelName, params));
+      let promise = this.store[this._storeFindMethod](modelName, params).then(this.afterInfinityModel);
 
       promise.then(
         newObjects => {

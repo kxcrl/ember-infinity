@@ -455,6 +455,41 @@ test('it allows overrides/manual invocations of updateInfinityModel', assert => 
   assert.equal(model.get('content.lastObject.title'), 'Tender Is the Night', 'updateInfinityModel can be invoked manually');
 });
 
+test('it returns objects fetched from the store to the afterInfinityModel method', assert => {
+  var RouteObject = Ember.Route.extend(RouteMixin, {
+    model() {
+      return this.infinityModel('item');
+    },
+    afterInfinityModel(items) {
+      return items.setEach('author', 'F. Scott Fitzgerald');
+    }
+  });
+
+  var route = RouteObject.create();
+
+  var dummyStore = {
+    query() {
+      var item = { id: 1, title: 'The Great Gatsby' };
+      return new Ember.RSVP.Promise(resolve => {
+        Ember.run(this, resolve, Ember.ArrayProxy.create({
+          content: Ember.A([item])
+        }));
+      });
+    }
+  };
+
+  route.set('store', dummyStore);
+
+  var model;
+  Ember.run(() => {
+    route.model().then(result => {
+      model = result;
+    });
+  });
+
+  assert.equal(model.get('content.firstObject.author'), 'F. Scott Fitzgerald', 'updates made in afterInfinityModel should take effect');
+});
+
 /*
  * Compatibility Tests
  */
